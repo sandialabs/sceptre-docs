@@ -63,19 +63,19 @@ Check "Prerequisites"
 
 5. Install docker images
  
-    - Pull pre-built docker containers. Useful for users of SCEPTRE. 
+	- Pull pre-built docker containers. Useful for users of SCEPTRE. 
 
-	    ```
- docker pull ghcr.io/sandialabs/sceptre-phenix/phenix:main
- docker pull ghcr.io/sandia-minimega/minimega/minimega:master
-	    ```
+		```
+		docker pull ghcr.io/sandialabs/sceptre-phenix/phenix:main
+		docker pull ghcr.io/sandia-minimega/minimega/minimega:master
+		```
 
-    - Alternatively, build the docker containers from source. Useufl for developers of SCEPTRE.
+	- Alternatively, build the docker containers from source. Useufl for developers of SCEPTRE.
                  
-	    ```
- cd phenix/docker
- docker compose build
-	    ```
+		```
+		cd phenix/docker
+		docker compose build
+		```
 
     - **Tip** - If behind a proxy, you must add `http_proxy` and `https_proxy` build args to the build command (Ex. `--build-arg http_proxy=http://proxy.example.com:8080`). Additionally, `INSTALL_CERTS` build args may be required for custom certificates.
 
@@ -159,32 +159,32 @@ Check "Prerequisites"
 
 5. Install docker images
     
-    - Pull pre-built docker containers. Useful for users of SCEPTRE. 
+	- Pull pre-built docker containers. Useful for users of SCEPTRE. 
 
-	    ```
-docker pull ghcr.io/sandialabs/sceptre-phenix/phenix:main
-docker pull ghcr.io/sandia-minimega/minimega/minimega:master
-	    ```
+		```
+		docker pull ghcr.io/sandialabs/sceptre-phenix/phenix:main
+		docker pull ghcr.io/sandia-minimega/minimega/minimega:master
+		```
 
-    - Alternatively, build the docker containers from source. Useufl for developers of SCEPTRE.
+	- Alternatively, build the docker containers from source. Useufl for developers of SCEPTRE.
 	 
-	    ```
-cd phenix/docker
-docker compose build
-	    ```
+		```
+		cd phenix/docker
+		docker compose build
+		```
 
-    - **Tip** - If behind a proxy, you must add `http_proxy` and `https_proxy` build args to the build command (Ex. `--build-arg http_proxy=http://proxy.example.com:8080`). Additionally, `INSTALL_CERTS` build args may be required for custom certificates.
+	- **Tip** - If behind a proxy, you must add `http_proxy` and `https_proxy` build args to the build command (Ex. `--build-arg http_proxy=http://proxy.example.com:8080`). Additionally, `INSTALL_CERTS` build args may be required for custom certificates.
 
 6. Configure NFS share
     
-    - Setting up a Network File Share allows sharing of the base KVM images across multiple nodes
+	- Setting up a Network File Share allows sharing of the base KVM images across multiple nodes
 
-	    ```
-echo '/phenix/images *(rw,sync,no_subtree_check)' >> /etc/exports
-service nfs-kernel-server restart
-	    ```
+		```
+		echo '/phenix/images *(rw,sync,no_subtree_check)' >> /etc/exports
+		service nfs-kernel-server restart
+		```
 
-    - **Tip** - This is much more efficient than copying large base KVM images to each node individually
+	- **Tip** - This is much more efficient than copying large base KVM images to each node individually
 
 7. Set the **CONTEXT** environment variable and start up the SCEPTRE docker containers
 
@@ -218,102 +218,102 @@ service nfs-kernel-server restart
 
 2. Mount NFS share
     
-    - Replace `X.X.X.X` with the IP address of the headnode
+	- Replace `X.X.X.X` with the IP address of the headnode
 
-	    ```
-mkdir /phenix/images
-echo 'X.X.X.X:/phenix/images /phenix/images nfs auto,rw 0 0' >> /etc/fstab
-mount -a
-	    ```
+		```
+		mkdir /phenix/images
+		echo 'X.X.X.X:/phenix/images /phenix/images nfs auto,rw 0 0' >> /etc/fstab
+		mount -a
+		```
 
 ## Getting Started - Helloworld Experiment
 
 1. Build the required backing image
 
-    - The helloworld topology requires one VM backing image called `ubuntu.qc2`. 
+	- The helloworld topology requires one VM backing image called `ubuntu.qc2`. 
     
-    - Build this image via the CLI using the following commands on the headnode:
+	- Build this image via the CLI using the following commands on the headnode:
         
-	    ```           
-phenix image create -T /phenix/vmdb2/scripts/ubuntu --format qcow2 --release focal -c ubuntu
-phenix image build ubuntu -o /phenix -c -x
-mv /phenix/ubuntu.qc2 /phenix/images
-            ```
+		```
+		phenix image create -T /phenix/vmdb2/scripts/ubuntu --format qcow2 --release focal -c ubuntu
+		phenix image build ubuntu -o /phenix -c -x
+		mv /phenix/ubuntu.qc2 /phenix/images
+		```
 
 2. Access phenix web
 
-    - The phēnix web interface allows for creating, configuring, and managing SCEPTRE experiments. First open up `http://<Headnode IP address>:3000` in your browser, and you'll see the home page displayed:
+	- The phēnix web interface allows for creating, configuring, and managing SCEPTRE experiments. First open up `http://<Headnode IP address>:3000` in your browser, and you'll see the home page displayed:
 
-        ![](img/phenix_home.png)
+		![](img/phenix_home.png)
 
 3. Upload topology
 
-    - You must first upload the topology file for phēnix to ingest. From the home page, click on the `Configs` tab to navigate to the configurations page. Next click the ![](img/upload_button.png) button and drag/drop the `helloworld.yaml` file into the dialog box to upload it:
+	- You must first upload the topology file for phēnix to ingest. From the home page, click on the `Configs` tab to navigate to the configurations page. Next click the ![](img/upload_button.png) button and drag/drop the `helloworld.yaml` file into the dialog box to upload it:
         
-        ![](img/config_page.png)
-        ![](img/upload_dialog.png)
+		![](img/config_page.png)
+   		![](img/upload_dialog.png)
 
-    -  Alternatively, you can upload the topology via the CLI using the following command on the headnode:
+	-  Alternatively, you can upload the topology via the CLI using the following command on the headnode:
 
-            ```
-phenix config create /phenix/topologies/helloworld.yaml
-            ```
+		```
+		phenix config create /phenix/topologies/helloworld.yaml
+		```
 
-    - You should now see the `helloworld` topology in the configs table:
+	- You should now see the `helloworld` topology in the configs table:
 
-        ![](img/config_list.png)
+		![](img/config_list.png)
 
 4. Create Experiment
 
-    - Navigate back to the home page by clicking the `Experiments` tab. 
-    - Click the new experiment ![](img/create_now.png) button to open the create experiment dialog. 
-    - Fill out the dialog as shown (leaving everything else blank) and then click the ![](img/create.png) button:
+	- Navigate back to the home page by clicking the `Experiments` tab. 
+	- Click the new experiment ![](img/create_now.png) button to open the create experiment dialog. 
+	- Fill out the dialog as shown (leaving everything else blank) and then click the ![](img/create.png) button:
 
-        - Experiment Name: __*my_first_experiment*__
-        - Topology: __*helloworld*__
+		- Experiment Name: __*my_first_experiment*__
+		- Topology: __*helloworld*__
 
-        ![](img/phenix_create.png)
+		![](img/phenix_create.png)
 
-    - Alternatively, you can create the experiment via the CLI using the following command on the headnode:
+	- Alternatively, you can create the experiment via the CLI using the following command on the headnode:
 
-            ```
-phenix exp create my_first_experiment -t helloworld
-	    ```
+		```
+		phenix exp create my_first_experiment -t helloworld
+		```
 
 5. Deploy Experiment
 
-    - Your newly created experiment will appear in the experiments table:
+	- Your newly created experiment will appear in the experiments table:
 
-        ![](img/phenix_list.png)
+		![](img/phenix_list.png)
 
-    - To start the experiment, click the ![](img/status.png) button and then click ![](img/start.png):
+	- To start the experiment, click the ![](img/status.png) button and then click ![](img/start.png):
 
-        ![](img/phenix_start.png)
+		![](img/phenix_start.png)
 
-    -  Alternatively, you can deploy the experiment via the CLI using the following command on the headnode:
+	-  Alternatively, you can deploy the experiment via the CLI using the following command on the headnode:
 
-            ```
-phenix exp start my_first_experiment
-	    ```
+		```
+		phenix exp start my_first_experiment
+		```
 
-    - Once your experiment starts up, its status will be marked as ![](img/started.png). Click on the name of the experiment ![](img/name.png), and phēnix will switch to the experiment info page:
+	- Once your experiment starts up, its status will be marked as ![](img/started.png). Click on the name of the experiment ![](img/name.png), and phēnix will switch to the experiment info page:
 
-        ![](img/phenix_info.png)
+		![](img/phenix_info.png)
 
-    - **Tip** - Click on the State of Health ![](img/soh_button.png) button to see a network topology map, and click the Go Back ![](img/goback.png) button to return to the Experiment Info page.
+	- **Tip** - Click on the State of Health ![](img/soh_button.png) button to see a network topology map, and click the Go Back ![](img/goback.png) button to return to the Experiment Info page.
 
-        ![](img/topo_graph.png)
+		![](img/topo_graph.png)
 
 6. Test
 
-    - Congratulations! You've created and deployed your first SCEPTRE experiment.
-    - From here you can interact with individual Virtual Machines (VMs) by clicking on the respective screenshot, which will open a new browser tab for that VM:
+	- Congratulations! You've created and deployed your first SCEPTRE experiment.
+	- From here you can interact with individual Virtual Machines (VMs) by clicking on the respective screenshot, which will open a new browser tab for that VM:
 
-        ![](img/vnc.png)
+		![](img/vnc.png)
 
-    - Login as the `ubuntu` user (with password `ubuntu`) for either of the VMs and trying pinging the other IP address:
+	- Login as the `ubuntu` user (with password `ubuntu`) for either of the VMs and trying pinging the other IP address:
 
-        ![](img/ping.png)
+		![](img/ping.png)
 
 ## Getting Started - SCEPTRE-on-a-Platter (SOAP)
 
@@ -321,39 +321,40 @@ Now that you can run the basic helloworld topology, we are ready to run a topolo
 
 1. Build additional required backing images
 
-        ```
-        phenix image create -O /phenix/vmdb2/overlays/bennu,/phenix/vmdb2/overlays/brash -T /phenix/vmdb2/scripts/aptly,/phenix/vmdb2/scripts/bennu --format qcow2 --release focal -c bennu
-        phenix image build bennu -o /phenix -c -x
+	```
+	phenix image create -O /phenix/vmdb2/overlays/bennu,/phenix/vmdb2/overlays/brash -T /phenix/vmdb2/scripts/aptly,/phenix/vmdb2/scripts/bennu --format qcow2 --release focal -c bennu
+	phenix image build bennu -o /phenix -c -x
 	```
 
 2.  Request other backing images
 
-    - SOAP uses other backing images that are not currently supported by phēnix image. To obtain a copy of these backing images, email wg-sceptre-core@sandia.gov with your request. 
+	- SOAP uses other backing images that are not currently supported by phēnix image. To obtain a copy of these backing images, email wg-sceptre-core@sandia.gov with your request. 
 
 3. Access phēnix web
 
 4. Upload topology and scenario files
 
-    - soap-topology.yaml
-    - sceptre.yaml
-    - soh.yaml
-    - soap-scenario.yaml
+	- soap-topology.yaml
+	- sceptre.yaml
+	- soh.yaml
+	- soap-scenario.yaml
 
 5. Create Experiment
 
-    - Create an experiment using the `soap` topology.
-    - Additionally, select the `soap` scenario file under the "Experiment Scenario" dropdown.  
+	- Create an experiment using the `soap` topology.
+	- Additionally, select the `soap` scenario file under the "Experiment Scenario" dropdown.  
 
-    - Alternatively, you can create the experiment via the CLI using the following command on the headnode:
+	- Alternatively, you can create the experiment via the CLI using the following command on the headnode:
 
-        ```
-phenix exp create my_soap_experiment -t soap -s soap
-        ```
+		```
+		phenix exp create my_soap_experiment -t soap -s soap
+		```
 
 6. Deploy Experiment
 
 7. Test
-    - For details on how to navigate and test the experiment, read the [SOAP User Guide](https://github.com/sandialabs/sceptre-phenix-topologies/blob/main/soap/SOAP_User_Guide__UUR__20200817.pdf)
+
+	- For details on how to navigate and test the experiment, read the [SOAP User Guide](https://github.com/sandialabs/sceptre-phenix-topologies/blob/main/soap/SOAP_User_Guide__UUR__20200817.pdf)
     
 
 ## Getting Help
