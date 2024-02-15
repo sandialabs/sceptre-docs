@@ -131,6 +131,7 @@ The SCEPTRE app is configured by specifying the desired configurations in a scen
 
 ### HMI
 - `type: hmi`
+- `connected_scadas:` A list of scada servers for this HMI to connect to. If empty, it will connect to any scada servers on the same subnet. 
 
 ### Data historian
 
@@ -142,6 +143,8 @@ The SCEPTRE app is configured by specifying the desired configurations in a scen
 ### Engineer Workstation
 
 - `type: engineer-workstation`
+- `connected_rtus:` A list of field devives for the the engineer workstation to create connections to.
+- `connection_interval:` A interval (seconds) that the engieer workstation will use between autoconnections made to the list of `connected_rtus` using WinSCP. If empty, the engieer workstation will not autoconnect to the field devices. 
 
 ## Example
 
