@@ -38,13 +38,15 @@ the `vm config qemu-append -vga qxl` is only required for Linux VMs. You
 **MUST** comment this out for modifying Windows VMs.
 
 To launch the VM using minimega, execute the following command. Note, that you
-must pass the full path to the .mm script.
+must pass the full path to the `.mm` script.
 
-`sudo minimega -e read /home/ubuntu/modify.mm`
+```bash
+sudo minimega -e read /home/ubuntu/modify.mm
+```
 
 After the VM is launched, you should be able to see the VM in the minimega web
 GUI. To access the minimega web GUI, you must forward port 9001 to your machine
-then browse to the port (`localhost:9001`) in a web browser.
+then browse to the port (`http://localhost:9001`) in a web browser.
 
 You might need to setup a few interfaces or add proxy settings if you need the VM to access the internet. From there, any changes you make to the VM will persist!
 
@@ -56,4 +58,4 @@ installing new [SCADA](glossary.md#acronyms) software, you likely need to
 test the configuration to ensure it's working. The phēnix GUI allows users to
 easily configure VM images to boot in snapshot or nonsnapshot.
 
-After an experiment has been created, you can modify a VM as desired and then save a new copy of the backing image. To do this, click on the name of the VM to pull up a menu for the VM. At the bottom, click on the floppy disk icon ![](img/backing_image.png). Enter the name of what you would like to call the new backing image and click "Create". This may take some time to successfully complete. Remember, this creates a new backing image, so you either need to update your topology file to use this new file, or replace the existing file once you have stopped your experiment. 
+After an experiment has been created, you can modify a VM as desired and then save a new copy of the backing image. To do this, click on the name of the VM to pull up a menu for the VM. At the bottom, click on the floppy disk icon ![](img/backing_image.png). Enter the name of what you would like to call the new backing image and click "Create". This may take some time to successfully complete. Remember, this creates a new backing image, so you either need to update your topology file to use this new file, or replace the existing file once you have stopped your experiment.
