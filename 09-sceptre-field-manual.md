@@ -2,9 +2,7 @@
 
 ## **Connecting to Brash Shell**
 
-On the “system tools” section of the engineer-workstation desktop,
-
-double-click on “putty.exe”.
+On the "system tools" section of the engineer-workstation desktop, double-click on "putty.exe".
 
 ![](img/manual/UpdatesApril2019/EngineeringWorkstation.JPG)
 
@@ -16,9 +14,8 @@ to. Ensure that you are connecting via telnet with port 1337.
 Once you’re connected to the field device, login to the brash shell with the
 following credentials:
 
-**Username: `sceptre`**
-
-**Password: `sceptre`**
+- **Username: `sceptre`**
+- **Password: `sceptre`**
 
 ![](img/manual/UpdatesApril2019/brashStartUp.JPG)
 
@@ -99,8 +96,8 @@ user is not root, the following error message will be displayed
 
 **Note**: This method is only accessible from the MGMT network (172.16.0.0/16).
 
-On the “system tools” section of the engineer-workstation desktop,
-double-click on “putty.exe”.
+On the "system tools" section of the engineer-workstation desktop,
+double-click on "putty.exe".
 
 Once PuTTY is open, double click on the field device you would like to connect
 to. Ensure that you are connecting via ssh with port 22 using MGMT network IP
@@ -108,6 +105,5 @@ addresses.
 
 Once you're connected to the field device, login with the following credentials:
 
-**Username: `root`**
-
-**Password: `SiaSd3te`**
+- **Username: `root`**
+- **Password: `SiaSd3te`**

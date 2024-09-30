@@ -25,8 +25,8 @@ To get started, take a look at our [Quick Start Guide](quick-start.md).
 
 SCEPTRE consists of several different components/code bases:
 
-- [sceptre-phenix](https://github.com/sandialabs/sceptre-phenix): Phēnix is an orchestrator that manages the creation, configuration, and deployment of modeling and simulation experiments. 
-- [sceptre-phenix-apps](https://github.com/sandialabs/sceptre-phenix-apps): Phēnix apps contains user applications written to work with phēnix. These applications add extra "stuff" to experiments. Most notable of apps is the "sceptre" app which add the ICS flavor to an experiment. 
+- [sceptre-phenix](https://github.com/sandialabs/sceptre-phenix): Phēnix is an orchestrator that manages the creation, configuration, and deployment of modeling and simulation experiments. The phenix documentation is here: [phenix.sceptre.dev](https://phenix.sceptre.dev/latest/)
+- [sceptre-phenix-apps](https://github.com/sandialabs/sceptre-phenix-apps): Phēnix apps contains user applications written to work with phēnix. These applications add extra "stuff" to experiments. Most notable of apps is the "sceptre" app which add the ICS flavor to an experiment.
 - [sceptre-phenix-topologies](https://github.com/sandialabs/sceptre-phenix-topologies): A topology is a collection of network definition files that define a specific model. Files contained in this repository contain some existing user created topologies.
 - [sceptre-phenix-images](https://github.com/sandialabs/sceptre-phenix-images): phēnix image is a tool for quickly creating vm images with debian-based OSes. It is a wrapper of the vmdb2 tool which, in turn, is a wrapper of qemu-img, parted, kpartx, and debootstrap. Files contained in this repository can be used to create vm images for use in different topologies.
 - [sceptre-bennu](https://github.com/sandialabs/sceptre-bennu): bennu is part of the SCEPTRE codebase that is responsible for modeling and simulation of ICS/SCADA devices and their communication protocols.

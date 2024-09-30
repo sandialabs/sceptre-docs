@@ -61,7 +61,9 @@ To figure out which physical port maps to which interface name, use something
 like `ethtool` to figure it out. For example, to figure out which physical port
 `eno2` is on, you can run the following command:
 
-`sudo ethtool -p eno2`
+```bash
+sudo ethtool -p eno2
+```
 
 Once run, the link light LED on that particular interface will flash at an even
 second interval.
@@ -78,7 +80,9 @@ physical port into the `EXP_1` VLAN 103, we need to run a
 [openvswitch](glossary.md#terminology) command on the physical host, in this example `halo6`. To bridge `eno2` into the
 experiment, we run the following command:
 
-`sudo ovs-vsctl add-port phenix eno2 tag=103`
+```bash
+sudo ovs-vsctl add-port phenix eno2 tag=103
+```
 
 This ovs command adds the `eno2` port to the phēnix bridge, and tags all
 traffic comming into the port with a VLAN tag of 103. The `tag=103` is important
