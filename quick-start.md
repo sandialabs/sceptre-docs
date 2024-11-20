@@ -164,9 +164,9 @@ mount -a
 	- Build this image via the CLI using the following commands on the headnode:
 
 		```bash
-		phenix image create -T /phenix/vmdb2/scripts/ubuntu --format qcow2 --release focal -c ubuntu
-		phenix image build ubuntu -o /phenix -c -x
-		mv /phenix/ubuntu.qc2 /phenix/images
+phenix image create -T /phenix/vmdb2/scripts/ubuntu --format qcow2 --release focal -c ubuntu
+phenix image build ubuntu -o /phenix -c -x
+mv /phenix/ubuntu.qc2 /phenix/images
 		```
 
 2. Access phenix web
@@ -185,7 +185,7 @@ mount -a
 	-  Alternatively, you can upload the topology via the CLI using the following command on the headnode:
 
 		```bash
-		phenix config create /phenix/topologies/helloworld.yaml
+phenix config create /phenix/topologies/helloworld.yaml
 		```
 
 	- You should now see the `helloworld` topology in the configs table:
@@ -206,7 +206,7 @@ mount -a
 	- Alternatively, you can create the experiment via the CLI using the following command on the headnode:
 
 		```bash
-		phenix exp create my_first_experiment -t helloworld
+phenix exp create my_first_experiment -t helloworld
 		```
 
 5. Deploy Experiment
@@ -222,7 +222,7 @@ mount -a
 	-  Alternatively, you can deploy the experiment via the CLI using the following command on the headnode:
 
 		```bash
-		phenix exp start my_first_experiment
+phenix exp start my_first_experiment
 		```
 
 	- Once your experiment starts up, its status will be marked as ![](img/started.png). Click on the name of the experiment ![](img/name.png), and phēnix will switch to the experiment info page:
@@ -234,7 +234,6 @@ mount -a
 		![](img/topo_graph.png)
 
 6. Test
-
 	- Congratulations! You've created and deployed your first SCEPTRE experiment.
 	- From here you can interact with individual Virtual Machines (VMs) by clicking on the respective screenshot, which will open a new browser tab for that VM:
 
@@ -244,35 +243,40 @@ mount -a
 
 		![](img/ping.png)
 
+
 ## Getting Started - SCEPTRE-on-a-Platter (SOAP)
 
 Now that you can run the basic helloworld topology, we are ready to run a topology of a notional ICS. This topology, called SCEPTRE-on-a-Platter (SOAP), models a notional SCADA system for a 300 bus microgrid system. The model uses PyPower to model the physical process itself, Ignition SCADA software, and additionally includes the ControlThings.io environment to additionally provide a testing suite for the ICS environment.
 
 1. Build additional required backing images
+
 	```bash
-	phenix image create -O /phenix/vmdb2/overlays/bennu,/phenix/vmdb2/overlays/brash -T /phenix/vmdb2/scripts/aptly,/phenix/vmdb2/scripts/bennu --format qcow2 --release focal -c bennu
-	phenix image build bennu -o /phenix -c -x
+phenix image create -O /phenix/vmdb2/overlays/bennu,/phenix/vmdb2/overlays/brash -T /phenix/vmdb2/scripts/aptly,/phenix/vmdb2/scripts/bennu --format qcow2 --release focal -c bennu
+phenix image build bennu -o /phenix -c -x
 	```
-2. Request other backing images
+
+1. Request other backing images
 	- SOAP uses other backing images that are not currently supported by phēnix image. To obtain a copy of these backing images, email `wg-sceptre-core@sandia.gov` with your request.
-3. Access phēnix web
-4. Upload topology and scenario files
+1. Access phēnix web
+1. Upload topology and scenario files
 	- soap-topology.yaml
 	- sceptre.yaml
 	- soh.yaml
 	- soap-scenario.yaml
-5. Create Experiment
+1. Create Experiment
 	- Create an experiment using the `soap` topology.
 	- Additionally, select the `soap` scenario file under the "Experiment Scenario" dropdown.
 	- Alternatively, you can create the experiment via the CLI using the following command on the headnode:
+
 		```bash
-		phenix exp create my_soap_experiment -t soap -s soap
+phenix exp create my_soap_experiment -t soap -s soap
 		```
-6. Deploy Experiment
-7. Test
+
+1. Deploy Experiment
+1. Test
 	- For details on how to navigate and test the experiment, read the [SOAP User Guide](https://github.com/sandialabs/sceptre-phenix-topologies/blob/main/soap/SOAP_User_Guide__UUR__20200817.pdf)
 
 
 ## Getting Help
 
-To get help with SCEPTRE, contact us at `wg-sceptre@sandia.gov`.
+To get help with SCEPTRE, open an issue on the relevant GitHub repository, or contact us at `wg-sceptre@sandia.gov` or `emulytics@sandia.gov`.
