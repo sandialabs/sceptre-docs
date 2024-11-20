@@ -4,226 +4,157 @@
 
 The SCEPTRE platform is a combination of [COTS](about/glossary.md#cots) hardware, software, and Sandia-developed tools. Installation can be local (one computer) or distributed (multiple computers).
 
-*For the best performance, install SCEPTRE using the __distributed__ installation guide.*
+*For the best performance, install SCEPTRE using the [distributed](#distributed-installation-guide-recommended) installation guide.*
+
+### Prerequisites
+
+- Computer has Ubuntu 20.04 LTS or 22.04 LTS [installed](https://help.ubuntu.com/20.04/installation-guide/amd64/index.html) as the operating system
+- Computer has internet access to install packages (or an [apt-mirror](01-cluster.md#apt-mirror) has been configured). If behind a web interception proxy, ensure `apt` is configured to use the proxy.
+- All commands should be ran as `root`. Switch to the root user using `sudo su`.
+
 
 ### *Local Installation Guide (Quickest)*
 
 For a local SCEPTRE installation, a single computer will act as both [headnode](#headnode) and [compute node](#compute-node).
 
-Check "Prerequisites"
-
-- Computer has Ubuntu 20.04 [installed](https://help.ubuntu.com/20.04/installation-guide/amd64/index.html) as the operating system
-- Computer has internet access to install packages (or an [apt-mirror](01-cluster.md#apt-mirror) has been configured)
-- All commands should be ran as 'root'. Switch to the root user using `sudo su`
-
-1. Install required packages
+1. Check [Prerequisites](#prerequisites) and ensure you are running as `root` user (`sudo su`).
+2. Install required packages. Alternatively, follow [Docker's installation instructions for Ubuntu](https://docs.docker.com/engine/install/ubuntu/).
 
 	```bash
-	apt install -y curl git make docker.io
-	mkdir -p /usr/local/lib/docker/cli-plugins
-	VERSION=$(GIT_SSL_NO_VERIFY=true git ls-remote https://github.com/docker/compose | grep refs/tags | grep -oP '[0-9]+\.[0-9][0-9]+\.[0-9]+$' | sort | tail -n 1)
-	curl -kL "https://github.com/docker/compose/releases/download/v${VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/lib/docker/cli-plugins/docker-compose
-	chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
+apt update
+apt install -y git docker.io docker-compose-plugin
 	```
 
-2. **Optional**  If behind a proxy server, you must add proxy info to your docker config
+3. **Optional** If behind a proxy server, configure Docker to use the proxy
 
 	```bash
-	mkdir /etc/systemd/system/docker.service.d/
-	cat <<EOF | sudo tee /etc/systemd/system/docker.service.d/http-proxy.conf
-	[Service]
-	Environment="NO_PROXY=*.example.com"
-	Environment="HTTP_PROXY=http://proxy.example.com:8080/"
-	Environment="HTTPS_PROXY=https://proxy.example.com:8080/"
-	Environment="no_proxy=*.example.com"
-	Environment="http_proxy=http://proxy.example.com:8080/"
-	Environment="https_proxy=https://proxy.example.com:8080/"
-	EOF
-	systemctl daemon-reload
-	systemctl restart docker
+mkdir /etc/systemd/system/docker.service.d/
+cat <<EOF | sudo tee /etc/systemd/system/docker.service.d/http-proxy.conf
+[Service]
+Environment="NO_PROXY=*.example.com"
+Environment="HTTP_PROXY=http://proxy.example.com:8080/"
+Environment="HTTPS_PROXY=https://proxy.example.com:8080/"
+Environment="no_proxy=*.example.com"
+Environment="http_proxy=http://proxy.example.com:8080/"
+Environment="https_proxy=https://proxy.example.com:8080/"
+EOF
+systemctl daemon-reload
+systemctl restart docker
 	```
 
- 3. Install topologies and base images
+4. Install topologies and base images
 
 	```bash
-	mkdir -p /phenix
-	cd /phenix
-	git clone https://github.com/sandialabs/sceptre-phenix-topologies.git topologies
-	git clone https://github.com/sandialabs/sceptre-phenix-images.git vmdb2
+mkdir -p /phenix
+cd /phenix
+git clone https://github.com/sandialabs/sceptre-phenix-topologies.git topologies
+git clone https://github.com/sandialabs/sceptre-phenix-images.git vmdb2
 	```
 
-4. Install phēnix source files
+5. Install phēnix source files
 
 	```bash
-	mkdir -p /opt
-	cd /opt
-	git clone https://github.com/sandialabs/sceptre-phenix.git phenix
+mkdir -p /opt
+cd /opt
+git clone https://github.com/sandialabs/sceptre-phenix.git phenix
 	```
 
-5. Install docker images
+6. Install docker images
+	- Pull pre-built docker containers. Useful for *users* of SCEPTRE.
+        ```bash
+docker pull ghcr.io/sandialabs/sceptre-phenix/phenix:main
+docker pull ghcr.io/sandia-minimega/minimega/minimega:master
+	    ```
 
-	- Pull pre-built docker containers. Useful for users of SCEPTRE.
-
+	- Alternatively, build the docker containers from source. Useful for *developers* of SCEPTRE.
 		```bash
-		docker pull ghcr.io/sandialabs/sceptre-phenix/phenix:main
-		docker pull ghcr.io/sandia-minimega/minimega/minimega:master
+cd /opt/phenix/docker
+docker compose build
 		```
 
-	- Alternatively, build the docker containers from source. Useufl for developers of SCEPTRE.
+    - **Tip** - If behind a web proxy, you must add `http_proxy` and `https_proxy` build args to the build command (Ex. `--build-arg http_proxy=http://proxy.example.com:8080 --build-arg https_proxy=http://proxy.example.com:8080`). Additionally, the `INSTALL_CERTS` build args may be required for custom certificates.
 
-		```bash
-		cd phenix/docker
-		docker compose build
-		```
-
-    - **Tip** - If behind a proxy, you must add `http_proxy` and `https_proxy` build args to the build command (Ex. `--build-arg http_proxy=http://proxy.example.com:8080`). Additionally, `INSTALL_CERTS` build args may be required for custom certificates.
-
-6. Set the **CONTEXT** environment variable and start up the SCEPTRE docker containers
+7. Set the `CONTEXT` environment variable and start up the SCEPTRE docker containers
 
 	```bash
-	echo "export CONTEXT=$(hostname)" >> ~/.rc && source ~/.rc
-	cd /opt/phenix/docker
-	docker compose up -d
-	```
-
- 7. **Optional** Add a few convenience aliases to your shell
-
-	```bash
-	cat <<EOF >> ~/._aliases
-	alias phenix='docker exec -it phenix phenix'
-	alias mm='docker exec -it minimega minimega -e'
-	alias mminfo='mm .columns name,state,ip,snapshot,cc_active vm info'
-	alias ovs-vsctl='docker exec -it minimega ovs-vsctl'
-	EOF
-	source ~/._aliases
-	```
-
-8. Access the phēnix web GUI at `0.0.0.0:3000` (this is the IP of the host, or `localhost`)
-
-### *Distributed Installation Guide (RECOMMENDED)*
-
-A distributed SCEPTRE installation requires one [headnode](01-cluster.md#headnode) computer and one or more [compute nodes](01-cluster.md#compute-node).
-
-Check "Prerequisites"
-
-- Computers have Ubuntu 20.04 [installed](https://help.ubuntu.com/20.04/installation-guide/amd64/index.html) as the operating system
-- Computers have internet access to install packages (or an [apt-mirror](01-cluster.md#apt-mirror) has been configured)
-- All commands should be ran as 'root'. Switch to the root user using `sudo su`
-
-**Headnode Install** - The headnode is the computer where experiment management tools are installed. Virtual machines do not run on this machine. For hardware requirements, see [Headnode Requirements](01-cluster.md#software-requirements)
-
-1. Install required packages
-
-	```bash
-	apt install -y curl git make docker.io
-	mkdir -p /usr/local/lib/docker/cli-plugins
-	VERSION=$(GIT_SSL_NO_VERIFY=true git ls-remote https://github.com/docker/compose | grep refs/tags | grep -oP '[0-9]+\.[0-9][0-9]+\.[0-9]+$' | sort | tail -n 1)
-	curl -kL "https://github.com/docker/compose/releases/download/v${VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/lib/docker/cli-plugins/docker-compose
-	chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
-	```
-
-2. **Optional** If behind a proxy server, you must add proxy info to your docker config
-
-	```bash
-	sudo mkdir /etc/systemd/system/docker.service.d/
-	cat <<EOF | sudo tee /etc/systemd/system/docker.service.d/http-proxy.conf
-	[Service]
-	Environment="NO_PROXY=*.example.com"
-	Environment="HTTP_PROXY=http://proxy.example.com:8080/"
-	Environment="HTTPS_PROXY=https://proxy.example.com:8080/"
-	Environment="no_proxy=*.example.com"
-	Environment="http_proxy=http://proxy.example.com:8080/"
-	Environment="https_proxy=https://proxy.example.com:8080/"
-	EOF
-	sudo systemctl daemon-reload
-	sudo systemctl restart docker
-	```
-
-3. Install topologies and base images
-
-	```bash
-	mkdir -p /phenix
-	cd /phenix
-	git clone https://github.com/sandialabs/sceptre-phenix-topologies.git topologies
-	git clone https://github.com/sandialabs/sceptre-phenix-images.git vmdb2
-	```
-
-4. Install phēnix source files
-
-	```bash
-	mkdir -p /opt
-	cd /opt
-	git clone https://github.com/sandialabs/sceptre-phenix.git phenix
-	```
-
-5. Install docker images
-
-	- Pull pre-built docker containers. Useful for users of SCEPTRE.
-
-		```bash
-		docker pull ghcr.io/sandialabs/sceptre-phenix/phenix:main
-		docker pull ghcr.io/sandia-minimega/minimega/minimega:master
-		```
-
-	- Alternatively, build the docker containers from source. Useufl for developers of SCEPTRE.
-
-		```bash
-		cd phenix/docker
-		docker compose build
-		```
-
-	- **Tip** - If behind a proxy, you must add `http_proxy` and `https_proxy` build args to the build command (Ex. `--build-arg http_proxy=http://proxy.example.com:8080`). Additionally, `INSTALL_CERTS` build args may be required for custom certificates.
-
-6. Configure NFS share
-
-	- Setting up a Network File Share allows sharing of the base KVM images across multiple nodes
-
-		```bash
-		echo '/phenix/images *(rw,sync,no_subtree_check)' >> /etc/exports
-		service nfs-kernel-server restart
-		```
-
-	- **Tip** - This is much more efficient than copying large base KVM images to each node individually
-
-7. Set the **CONTEXT** environment variable and start up the SCEPTRE docker containers
-
-	```bash
-	echo "export CONTEXT=$(hostname)" >> ~/.rc && source ~/.rc
-	cd /opt/phenix/docker
-	docker compose up -d
+echo "export CONTEXT=$(hostname)" >> ~/.profile
+source ~/.profile
+cd /opt/phenix/docker
+docker compose up -d
 	```
 
 8. **Optional** Add a few convenience aliases to your shell
 
 	```bash
-	cat <<EOF >> ~/._aliases
-	alias phenix='docker exec -it phenix phenix'
-	alias mm='docker exec -it minimega minimega -e'
-	alias mminfo='mm .columns name,state,ip,snapshot,cc_active vm info'
-	alias ovs-vsctl='docker exec -it minimega ovs-vsctl'
-	EOF
-	source ~/._aliases
+cat <<EOF >> ~/.bash_aliases
+alias phenix='docker exec -it phenix phenix'
+alias mm='docker exec -it minimega minimega -e'
+alias mminfo='mm .columns name,state,ip,snapshot,cc_active vm info'
+alias ovs-vsctl='docker exec -it minimega ovs-vsctl'
+EOF
+source ~/.bash_aliases
 	```
 
-7. Access the phēnix web GUI at `0.0.0.0:3000`
+9. Access the phēnix web GUI at `0.0.0.0:3000` (IP of the server, or `localhost`)
+10. Run phenix command line:
+
+    ```bash
+# If you didn't configure the aliases, replace "phenix" with "docker exec -it phenix phenix"
+phenix --version
+phenix --help
+    ```
+
+
+### *Distributed Installation Guide (RECOMMENDED)*
+
+A distributed SCEPTRE installation requires one [headnode](01-cluster.md#headnode) computer and one or more [compute nodes](01-cluster.md#compute-node).
+
+**Headnode Install** - The headnode is the computer where experiment management tools are installed. Virtual machines do not run on this machine. For hardware requirements, see [Headnode Requirements](01-cluster.md#software-requirements)
+
+1. Check [Prerequisites](#prerequisites) and ensure you are running as `root` user (`sudo su`).
+2. Follow the steps in the [Local Installation Guide](#local-installation-guide-quickest) to deploy SCEPTRE on the headnode.
+3. Stop the Docker containers
+
+    ```bash
+cd /opt/phenix/docker
+docker compose stop
+    ```
+
+
+4. Configure NFS share. Setting up a Network File Share allows sharing of the base KVM images across multiple nodes. **Tip** - This is much more efficient than copying large base KVM images to each node individually.
+
+    ```bash
+echo '/phenix/images *(rw,sync,no_subtree_check)' >> /etc/exports
+service nfs-kernel-server restart
+    ```
+
+5. Start up the docker containers
+
+    ```bash
+cd /opt/phenix/docker
+docker compose up -d
+    ```
+
+6. Access the phēnix web GUI at `0.0.0.0:3000` (IP of the server, or `localhost`)
 
 **"Compute Node" Install** - The compute node is the computer where virtual machines run. For hardware requirements, see [Compute Node Requirements](01-cluster.md#software-requirements_1)
 
-1. Install required packages
+1. Check [Prerequisites](#prerequisites)
+2. Install required packages
 
 	```bash
-	apt install -y nfs-common openvswitch-switch qemu-kvm tmux vim
+apt update
+apt install -y nfs-common openvswitch-switch qemu-kvm tmux vim
 	```
 
-2. Mount NFS share
+3. Mount NFS share. Replace `X.X.X.X` with the IP address of the headnode.
 
-	- Replace `X.X.X.X` with the IP address of the headnode
+    ```bash
+mkdir -p /phenix/images
+echo 'X.X.X.X:/phenix/images /phenix/images nfs auto,rw 0 0' >> /etc/fstab
+mount -a
+    ```
 
-		```bash
-		mkdir /phenix/images
-		echo 'X.X.X.X:/phenix/images /phenix/images nfs auto,rw 0 0' >> /etc/fstab
-		mount -a
-		```
 
 ## Getting Started - Helloworld Experiment
 
