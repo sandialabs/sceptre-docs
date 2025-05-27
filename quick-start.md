@@ -239,7 +239,7 @@ phenix exp start my_first_experiment
 
 		![](img/vnc.png)
 
-	- Login as the `ubuntu` user (with password `ubuntu`) for either of the VMs and trying pinging the other IP address:
+	- Login as the `root` user for either of the VMs and trying pinging the other IP address:
 
 		![](img/ping.png)
 
