@@ -9,6 +9,8 @@ SCEPTRE is comprised of simulated control system devices, such as remote termina
 
 The SCEPTRE platform provides a means for creating large-scale control system test environments suitable for cyber-physical security experiments. Leveraging modeling, simulation, and test bedding techniques, the test environments can be scripted to suite each experiment as necessary, are repeatable, and are much cheaper to construct than real or even lab-scale test environments. The standards-based SCADA protocols in the simulated field devices enable the use of 3rd party ICS and cyber security testing applications and supports the use of simulated and emulated network environments.
 
+For a broader description of SCEPTRE, please read our white-paper,  [SCEPTRE: A Cyber-Physical Emulation Capability](https://www.osti.gov/biblio/2999077).
+
 To get started, take a look at our [Quick Start Guide](quick-start.md).
 
 # Features
