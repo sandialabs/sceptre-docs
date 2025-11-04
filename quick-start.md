@@ -246,37 +246,11 @@ phenix exp start my_first_experiment
 
 ## Getting Started - SCEPTRE-on-a-Platter (SOAP)
 
-Now that you can run the basic helloworld topology, we are ready to run a topology of a notional ICS. This topology, called SCEPTRE-on-a-Platter (SOAP), models a notional SCADA system for a 300 bus microgrid system. The model uses PyPower to model the physical process itself, Ignition SCADA software, and additionally includes the ControlThings.io environment to additionally provide a testing suite for the ICS environment.
+Now that you can run the basic helloworld topology, we are ready to run a topology of a notional ICS. This topology, called SCEPTRE-on-a-Platter (SOAP), models a notional SCADA system for a 300 bus microgrid system. The model uses PyPower to model the power system and Ignition SCADA software for visibility and control.
 
-1. Build additional required backing images
-
-	```bash
-phenix image create -O /phenix/vmdb2/overlays/bennu,/phenix/vmdb2/overlays/brash -T /phenix/vmdb2/scripts/aptly,/phenix/vmdb2/scripts/bennu --format qcow2 --release focal -c bennu
-phenix image build bennu -o /phenix -c -x
-	```
-
-1. Request other backing images
-	- SOAP uses other backing images that are not currently supported by phēnix image. To obtain a copy of these backing images, email `wg-sceptre-core@sandia.gov` with your request.
-1. Access phēnix web
-1. Upload topology and scenario files
-	- soap-topology.yaml
-	- sceptre.yaml
-	- soh.yaml
-	- soap-scenario.yaml
-1. Create Experiment
-	- Create an experiment using the `soap` topology.
-	- Additionally, select the `soap` scenario file under the "Experiment Scenario" dropdown.
-	- Alternatively, you can create the experiment via the CLI using the following command on the headnode:
-
-		```bash
-phenix exp create my_soap_experiment -t soap -s soap
-		```
-
-1. Deploy Experiment
-1. Test
-	- For details on how to navigate and test the experiment, read the [SOAP User Guide](https://github.com/sandialabs/sceptre-phenix-topologies/blob/main/soap/SOAP_User_Guide__UUR__20200817.pdf)
+Instructions for launching the SOAP topology can be found at: [SCEPTRE Phenix Topologies - SOAP](https://github.com/sandialabs/sceptre-phenix-topologies/tree/main/soap)
 
 
 ## Getting Help
 
-To get help with SCEPTRE, open an issue on the relevant GitHub repository, or contact us at `wg-sceptre@sandia.gov` or `emulytics@sandia.gov`.
+To get help with SCEPTRE, open an issue on the relevant GitHub repository, or contact us at `wg-sceptre-core@sandia.gov` or `emulytics@sandia.gov`.
