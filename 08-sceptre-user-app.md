@@ -115,7 +115,7 @@ The SCEPTRE app is configured by specifying the desired configurations in a scen
     - `name`: Name of the tag.
     - `type`: Type of component as it maps to the infrastructure of the associated provider.
 - `connected_rtus`: If type `fd-client` or `fep`, this is a list of other field devices which serve data to this device.
-   
+
 ### OPC Server
 
 - `type: opc`
@@ -142,80 +142,87 @@ The SCEPTRE app is configured by specifying the desired configurations in a scen
 
 - `type: engineer-workstation`
 - `connected_rtus`: A list of field devives for the the engineer workstation to create connections to.
-- `connection_interval`: A interval (seconds) that the engieer workstation will use between autoconnections made to the list of `connected_rtus` using WinSCP. If empty, the engieer workstation will not autoconnect to the field devices.
+- `connect_interval`: A interval (seconds) that the engieer workstation will use between autoconnections made to the list of `connected_rtus` using WinSCP. If empty, the engieer workstation will not autoconnect to the field devices.
 
 ## Example
 
-The following is an example of how the SCEPTRE app. In this example, there is one physical process provider of a water way lock. There are two RTUs that monitor the lock and open/close gates based on logic defined in the config file. The OPC server monitors these two RTUs and then rest of the upstream SCADA software monitors and displays the data from the OPC server.
+The following is an example configuration of the SCEPTRE app. In this example, there is one physical process provider of a water way lock. There are two RTUs that monitor the lock and open/close gates based on logic defined in the config file. The OPC server monitors these two RTUs and then rest of the upstream SCADA software monitors and displays the data from the OPC server. The engineer workstation is has PuTTY configured to connect to the RTUs, and will automatically connect to them every 60 seconds.
 
 ```yaml
 - name: sceptre
   assetDir: /phenix/topologies/waterway
   hosts:
   - hostname: simulink-provider
-	metadata:
-	  gt: /phenix/topologies/waterway/injects/simulinkgt
-	  gt_template: /phenix/topologies/waterway/injects/main.tmpl
-	  publish_endpoint: udp://*;239.0.0.1:40000
-	  publish_points: /phenix/topologies/waterway/injects/publishPoints.txt
-	  simulator: Simulink
-	  solver: /phenix/topologies/waterway/injects/simulinksolver
-	  type: provider
+    metadata:
+      gt: /phenix/topologies/waterway/injects/simulinkgt
+      gt_template: /phenix/topologies/waterway/injects/main.tmpl
+      publish_endpoint: udp://*;239.0.0.1:40000
+      publish_points: /phenix/topologies/waterway/injects/publishPoints.txt
+      simulator: Simulink
+      solver: /phenix/topologies/waterway/injects/simulinksolver
+      type: provider
   - hostname: rtu-1
-	metadata:
-	  modbus:
-	  - name: lowerwater
-		type: water
-	  - name: lock
-		type: water
-	  - name: lowergate
-		type: gate
-	  - name: lowervalve
-		type: valve
-	  - name: lowersensor
-		type: boat-sensor
-	  - name: locksensor
-		type: boat-sensor
-	  infrastructure: waterway
-	  logic: lowergate.open = 1*((lowersensor.direction == 1) && (lowersensor.active == 1) && (lock.height >= lowerwater.height - 0.1) && (lock.height <= lowerwater.height + 0.1)) + 0*((locksensor.direction == 1) && (locksensor.active == 1) && (lock.height >= lowerwater.height - 0.1) && (lock.height <= lowerwater.height + 0.1)) + 1*((locksensor.direction == -1) && (locksensor.active == 1) && (lock.height >= lowerwater.height - 0.1) && (lock.height <= lowerwater.height + 0.1)) + 0*((lowersensor.direction == -1) && (lowersensor.active == 1)); lowervalve.open = 1*((lowersensor.direction == 1) && (lowersensor.active == 1) && (lock.height > lowerwater.height)) + 0*((locksensor.direction == 1) && (locksensor.active == 1) && (lock.height >= lowerwater.height)) + 1*((locksensor.direction == -1) && (locksensor.active == 1) && (lock.height > lowerwater.height)) + 0*((lowersensor.direction == -1) && (lowersensor.active == 1))
-	  provider: simulink-provider
-	  type: fd-server
+    metadata:
+      modbus:
+      - name: lowerwater
+        type: water
+      - name: lock
+        type: water
+      - name: lowergate
+        type: gate
+      - name: lowervalve
+        type: valve
+      - name: lowersensor
+        type: boat-sensor
+      - name: locksensor
+        type: boat-sensor
+      infrastructure: waterway
+      logic: lowergate.open = 1*((lowersensor.direction == 1) && (lowersensor.active == 1) && (lock.height >= lowerwater.height - 0.1) && (lock.height <= lowerwater.height + 0.1)) + 0*((locksensor.direction == 1) && (locksensor.active == 1) && (lock.height >= lowerwater.height - 0.1) && (lock.height <= lowerwater.height + 0.1)) + 1*((locksensor.direction == -1) && (locksensor.active == 1) && (lock.height >= lowerwater.height - 0.1) && (lock.height <= lowerwater.height + 0.1)) + 0*((lowersensor.direction == -1) && (lowersensor.active == 1)); lowervalve.open = 1*((lowersensor.direction == 1) && (lowersensor.active == 1) && (lock.height > lowerwater.height)) + 0*((locksensor.direction == 1) && (locksensor.active == 1) && (lock.height >= lowerwater.height)) + 1*((locksensor.direction == -1) && (locksensor.active == 1) && (lock.height > lowerwater.height)) + 0*((lowersensor.direction == -1) && (lowersensor.active == 1))
+      provider: simulink-provider
+      type: fd-server
   - hostname: rtu-2
-	metadata:
-	  modbus:
-	  - name: upperwater
-		type: water
-	  - name: lock
-		type: water
-	  - name: uppergate
-		type: gate
-	  - name: uppervalve
-		type: valve
-	  - name: uppersensor
-		type: boat-sensor
-	  - name: locksensor
-		type: boat-sensor
-	  infrastructure: waterway
-	  logic: uppergate.open = 1*((locksensor.direction == 1) && (locksensor.active == 1) && (lock.height >= upperwater.height - 0.1) && (lock.height <= upperwater.height + 0.1)) + 0*((uppersensor.direction == 1) && (uppersensor.active == 1)) + 1*((uppersensor.direction == -1) && (uppersensor.active == 1) && (lock.height >= upperwater.height - 0.1) && (lock.height <= upperwater.height + 0.1)) + 0*((locksensor.direction == -1) && (locksensor.active == 1) && (lock.height >= upperwater.height - 0.1) && (lock.height <= upperwater.height + 0.1)); uppervalve.open = 1*((locksensor.direction == 1) && (locksensor.active == 1) && (lock.height < upperwater.height)) + 0*((uppersensor.direction == 1) && (uppersensor.active == 1)) + 1*((uppersensor.direction == -1) && (uppersensor.active == 1) && (lock.height < upperwater.height)) + 0*((locksensor.direction == -1) && (locksensor.active == 1) && (lock.height >= upperwater.height - 0.1) && (lock.height <= upperwater.height + 0.1))
-	  provider: simulink-provider
-	  type: fd-server
+    metadata:
+      modbus:
+      - name: upperwater
+        type: water
+      - name: lock
+        type: water
+      - name: uppergate
+        type: gate
+      - name: uppervalve
+        type: valve
+      - name: uppersensor
+        type: boat-sensor
+      - name: locksensor
+        type: boat-sensor
+      infrastructure: waterway
+      logic: uppergate.open = 1*((locksensor.direction == 1) && (locksensor.active == 1) && (lock.height >= upperwater.height - 0.1) && (lock.height <= upperwater.height + 0.1)) + 0*((uppersensor.direction == 1) && (uppersensor.active == 1)) + 1*((uppersensor.direction == -1) && (uppersensor.active == 1) && (lock.height >= upperwater.height - 0.1) && (lock.height <= upperwater.height + 0.1)) + 0*((locksensor.direction == -1) && (locksensor.active == 1) && (lock.height >= upperwater.height - 0.1) && (lock.height <= upperwater.height + 0.1)); uppervalve.open = 1*((locksensor.direction == 1) && (locksensor.active == 1) && (lock.height < upperwater.height)) + 0*((uppersensor.direction == 1) && (uppersensor.active == 1)) + 1*((uppersensor.direction == -1) && (uppersensor.active == 1) && (lock.height < upperwater.height)) + 0*((locksensor.direction == -1) && (locksensor.active == 1) && (lock.height >= upperwater.height - 0.1) && (lock.height <= upperwater.height + 0.1))
+      provider: simulink-provider
+      type: fd-server
   - hostname: opc
-	metadata:
-	  connected_rtus:
-	  - rtu-1
-	  - rtu-2
-	  type: opc
+    metadata:
+      connected_rtus:
+      - rtu-1
+      - rtu-2
+      type: opc
   - hostname: scada-server
-	metadata:
-	  automation: /phenix/topologies/waterway/injects/myscada.exe
-	  project: /phenix/topologies/waterway/injects/waterway.mep
-	  type: scada-server
+    metadata:
+      automation: /phenix/topologies/waterway/injects/myscada.exe
+      project: /phenix/topologies/waterway/injects/waterway.mep
+      type: scada-server
   - hostname: hmi
-	metadata:
-	  type: hmi
+    metadata:
+      type: hmi
   - hostname: historian
-	metadata:
-	  type: historian
+    metadata:
+      type: historian
+  - hostname: engineer-workstation
+    metadata:
+      connected_rtus:
+      - rtu-1
+      - rtu-2
+      connect_interval: 60
+      type: engineer-workstation
 ```
 
 ## Debugging

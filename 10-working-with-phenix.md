@@ -1,4 +1,4 @@
-# Modifying an VM Images (.qc2)
+# Modifying VM Images (.qc2)
 
 ## Modifying an Image Independently
 
@@ -9,7 +9,7 @@ connectivity.
 
 > __NOTE:__
 
-> This section assumes you have a cluster confgiured similar to the
+> This section assumes you have a cluster configured similar to the
 [Cluster Configuration](quick-start.md) outlined under the Setup section.
 
 Directly from the [headnode](glossary.md#terminology), create a minimega
