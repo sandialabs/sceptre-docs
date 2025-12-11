@@ -125,7 +125,7 @@ The SCEPTRE app is configured by specifying the desired configurations in a scen
 
 - `type: scada-server`
 - `project`: Project file for mySCADA software. If no project file is given, a project file will be created using the OPC config to create a basic HMI with a list of all tag names and associated tag values. 
-- `automation`: Automation file for mySCADA software start up. If no automation file is given, an alternative method of automation described in the `scada.mako` will be used, but this auotmation may have issues depending on VM screen resolution depending on your build. 
+- `automation`: Automation file for mySCADA software start up. If no automation file is given, an alternative method of automation described in the SCEPRTE app template for the SCADA server startup (<https://github.com/sandialabs/sceptre-phenix-apps/blob/main/src/python/phenix_apps/apps/sceptre/templates/scada.mako>) will be used, but this auotmation may have issues depending on VM screen resolution depending on your build. 
 
 ### HMI
 - `type: hmi`
