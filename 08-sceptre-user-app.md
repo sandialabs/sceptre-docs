@@ -93,7 +93,7 @@ The SCEPTRE app is configured by specifying the desired configurations in a scen
 ### Provider
 
 - `type: provider`
-- `simulator`: Specifies the type of simulator used. Current options are: `PowerWorld`, `PowerWorldDynamics`, `PowerWorldHelics`, `PyPower`, `Simulink`, `RTDS`, `OpenDSS`, `Alicanto`
+- `simulator`: Specifies the type of simulator used. Current options are: `PowerWorld`, `PowerWorldDynamics`, `PowerWorldHelics`, `PyPower`, `Simulink`, `RTDS`, `OpenDSS`, `Alicanto`, `GenericPython`
 - `publish_endpoint`: Endpoint address for the UDP multicast traffic from the provider. Default value if unset is `udp://*;239.0.0.1:40000`.
 - `case`: If using a PowerWorld provider, this is the associated PowerWorld case file for the physical process simulation. If using a PyPower provider, this is the associated PyPower case file for the physical process simulation.
 - `oneline`: If using a PowerWorld provider, this is the associated PowerWorld oneline diagram for the physical process simulation.
@@ -102,13 +102,15 @@ The SCEPTRE app is configured by specifying the desired configurations in a scen
 - `publish_points`: If using a Simulink provider, this is a list of tags form the physical process simulation for the provider to publish to the field devices.
 - `gt`: If using a Simulink provider, this is the compiled executable for the ground truth data from the physical process simulation. Note that this is not required for the provider to function, this is a optional feature.
 - `gt_template`: If using a Simulink provider, this is the web template for displaying the ground truth data from the physical process simulation. Note that this is not required for the provider to function, this is a optional feature.
+- `simulation_file`: If using a Python provider, this is the python script containing the physical process simulation. 
 - `hil_tags`: If using [HIL](glossary.md#acronyms), a list of tags from the provider that will be sent to the HIL devices.
+
 
 ### Field Device
 
 - `type`: Field device type. Types: `fd-server`, `fd-client`, or `fep`.
 - `provider`: Hostname of the provider that the field device is getting data from.
-- `infrastructure`: Type of infrastructure that the provider is modeling. Types include: `power-transmission`, `power-distribution`, `batch-process`, `hvac`, `fuel`, `rtds`, `waterway`, and `battery`.
+- `infrastructure`: Type of infrastructure that the provider is modeling. Types include: `power-transmission`, `power-distribution`, `batch-process`, `hvac`, `fuel`, `rtds`, `waterway`, `battery` and `generic`.
 - `logic`: If specified, this contains any logic that the field device will be applying to input from the provider and writing back to the provider. The logic is implemented using [cparse](https://github.com/cparse/cparse). Refer to the cparse README for available operators, and the example below for example logic (as well as the open-source topology examples at [sceptre-phenix-topologies](https://github.com/sandialabs/sceptre-phenix-topologies)).
 - `cycle_time`: If specified, this determines at what rate the field device goes through an input/logic/output cycle.
 - `dnp3`, `dnp3-serial`, `modbus`, `modbus-serial`, `bacnet`, or `iec60870-5-104` If specified, one of these keys define what SCADA protocols the device will speak using the selected tags.
