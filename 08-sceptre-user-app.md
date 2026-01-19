@@ -102,7 +102,7 @@ The SCEPTRE app is configured by specifying the desired configurations in a scen
 - `publish_points`: If using a Simulink provider, this is a list of tags form the physical process simulation for the provider to publish to the field devices.
 - `gt`: If using a Simulink provider, this is the compiled executable for the ground truth data from the physical process simulation. Note that this is not required for the provider to function, this is a optional feature.
 - `gt_template`: If using a Simulink provider, this is the web template for displaying the ground truth data from the physical process simulation. Note that this is not required for the provider to function, this is a optional feature.
-- `simulation_file`: If using a Python provider, this is the python script containing the physical process simulation. 
+- `simulation_file`: If using a GenericPython provider, this is the python script containing the physical process simulation. 
 - `hil_tags`: If using [HIL](glossary.md#acronyms), a list of tags from the provider that will be sent to the HIL devices.
 
 
