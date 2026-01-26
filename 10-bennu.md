@@ -1,5 +1,10 @@
 # bennu
-Bennu and Pybennu are both installed on the `bennu.qc2` image that is used for most virtual RTUs in SCEPTRE.
+Bennu and Pybennu are both installed on the `bennu.qc2` image that is used for most virtual RTUs in SCEPTRE. This image is open-source, and can be downloaded from [sceptre-phenix-images](https://github.com/sandialabs/sceptre-phenix-images) on GitHub using [ORAS](https://oras.land/docs/installation/):
+
+```shell
+cd /phenix/images/
+oras pull ghcr.io/sandialabs/sceptre-phenix-images/bennu.qc2:latest
+```
 
 Both of these programs have some useful command line executables that can be used in SCEPTRE experiments to troubleshoot or force changes in the experiment.
 
@@ -112,9 +117,10 @@ Both of these programs have some useful command line executables that can be use
 ### pybennu-power-solver
 
 - This runs the power daemon code that is written for pybennu
+- This is usually run by a startup script injected by the SCEPTRE app
 - It requires a `.ini` config file to run (usually named `config.ini`)
 - The `.ini` file requires specifying how the power daemon will run and which power provider will be monitored and started by the daemon
-- This is usually run by a startup script injected by the SCEPTRE app
+- The RTDS and OPAL-RT providers require a `.yaml` config to run, in addition to `config.ini`. The path to this YAML file is specified in the `config.ini`.
 
 ### pybennu-siren
 
@@ -123,4 +129,7 @@ Both of these programs have some useful command line executables that can be use
 - This will launch siren according to the config
 
 ## Logs
-- To get logs from startup scripts: `journalctl -u phenix`
+- Startup script logs: `journalctl -u phenix`
+- C++ bennu logs: `/etc/sceptre/logs/*.log`
+- pybennu logs: `/var/log/bennu-pybennu.{out,err}`
+    - To follow: `tail -f /var/log/bennu-pybennu.*` (or the alias `plogs` on the `bennu.qc2` image)
